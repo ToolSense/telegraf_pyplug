@@ -14,7 +14,7 @@ PRINT_INFLUXDB_FORMAT_TEST_DATA: List[Dict[str, Any]] = [
     {
         'arguments': {
             'measurement': 'm',
-            'fields': {'f': 123}
+            'fields': {'f': 1234}
         },
         'expected': 'm f=123\n'
     },
