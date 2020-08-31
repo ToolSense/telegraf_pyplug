@@ -1,0 +1,74 @@
+---
+kind: pipeline
+name: test
+
+trigger:
+  event:
+  - push
+
+steps:
+- name: lint-test
+  image: python:3.8-slim
+  commands:
+  - python -m pip install -U pip setuptools
+  - python -m pip install -e .[devel]
+  - python -m mypy --namespace-packages telegraf_pyplug
+  - python -m pylint --rcfile=.pylintrc *.py telegraf_pyplug
+  - python -m unittest
+
+- name: github-comment
+  image: eu.gcr.io/toolsense/drone-github-comment:1.4
+  settings:
+    message: |
+      Hey @${DRONE_COMMIT_AUTHOR}, your build FAILED!
+      ${DRONE_SYSTEM_PROTO}://${DRONE_SYSTEM_HOSTNAME}/${DRONE_REPO}/${DRONE_BUILD_NUMBER}
+    delete_create: true
+    api_key:
+      from_secret: github_token
+  when:
+    event: pull_request
+    status: failure
+
+image_pull_secrets:
+- dockerconfigjson
+
+---
+kind: pipeline
+name: publish
+
+trigger:
+  event:
+  - tag
+
+steps:
+- name: lint-test
+  image: python:3.8-slim
+  commands:
+  - python -m pip install -U pip setuptools
+  - python -m pip install -e .[devel]
+  - python -m mypy --namespace-packages telegraf_pyplug
+  - python -m pylint --rcfile=.pylintrc *.py telegraf_pyplug
+  - python -m unittest
+
+- name: pypi_publish
+  image: plugins/pypi
+  settings:
+    username: toolsense
+    password:
+      from_secret: pypi_password
+
+- name: github-comment
+  image: eu.gcr.io/toolsense/drone-github-comment:1.4
+  settings:
+    message: |
+      Hey @${DRONE_COMMIT_AUTHOR}, your build FAILED!
+      ${DRONE_SYSTEM_PROTO}://${DRONE_SYSTEM_HOSTNAME}/${DRONE_REPO}/${DRONE_BUILD_NUMBER}
+    delete_create: true
+    api_key:
+      from_secret: github_token
+  when:
+    event: pull_request
+    status: failure
+
+image_pull_secrets:
+- dockerconfigjson
