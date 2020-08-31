@@ -43,14 +43,14 @@ test: venv
 
 clean:
 	find . -name '*.pyc' -delete
-	rm -rf $(VENV_NAME) *.eggs *.egg-info dist build docs/_build .cache
+	rm -rf $(VENV_NAME) *.eggs *.egg-info dist build docs/_build .cache .mypy_cache
 
 build: venv
 	rm -rf dist/*
 	${PYTHON} setup.py sdist bdist_wheel
 
-test_upload: venv
+test_upload: build
 	${PYTHON} -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
-upload: venv
+upload: build
 	${PYTHON} -m twine upload dist/*

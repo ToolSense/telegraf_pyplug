@@ -6,7 +6,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='telegraf_pyplug',
-    version='0.1.0',
+    version='0.1.1',
     author='Andrey Okulov',
     author_email='okulov@ya.ru',
     description='Telegraf_pyplug is a software library to simplify and standardize the development '
