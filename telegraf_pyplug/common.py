@@ -23,7 +23,7 @@ def get_mysql_query_result(sql: str, config: Dict[str, Any], sql_parameters: Opt
             result: Any = cursor.fetchall()
 
     except pymysql.Error as error:
-        raise IOError('Unexpected mysql error') from error
+        raise IOError(error) from None
 
     finally:
         if connection:
