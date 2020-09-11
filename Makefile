@@ -36,7 +36,9 @@ $(VENV_NAME)/bin/activate: setup.py
 
 lint: venv
 	${PYTHON} -m pylint --rcfile=.pylintrc *.py ${PROJECT}
+	${PYTHON} -m pylint --rcfile=.pylintrc *.py examples
 	${PYTHON} -m mypy --namespace-packages ${PROJECT}
+	${PYTHON} -m mypy --namespace-packages examples
 
 test: venv
 	${PYTHON} -m unittest

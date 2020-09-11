@@ -1,62 +1,10 @@
 """
-The common module: Shared functions, classes
+The main module: print functions
 """
 
-from typing import Optional, Union, Dict, Any, Tuple, List
-import datetime
+from typing import Optional, Union, Dict, List
 
-import pymysql
-import pytz
-
-
-def get_mysql_query_result(sql: str, config: Dict[str, Any], sql_parameters: Optional[Tuple[str, ...]] = None) -> Any:
-    """
-    Return Optional[List[Dict[str,Any]]].
-    IOError is raised in case of any kind problems with database/query
-    """
-    connection: Optional[pymysql.connections.Connection] = None
-    try:
-        connection = pymysql.connect(**config, cursorclass=pymysql.cursors.DictCursor)
-
-        with connection.cursor() as cursor:
-            cursor.execute(query=sql, args=sql_parameters)
-            result: Any = cursor.fetchall()
-
-    except pymysql.Error as error:
-        raise IOError(error) from None
-
-    finally:
-        if connection:
-            connection.close()
-
-    return result
-
-
-def datetime_tzinfo_to_nano_unix_timestamp(date_time: datetime.datetime) -> int:
-    """
-    Converts datetime WITH TZINFO to nano unix timestamp
-    """
-    return round(date_time.astimezone(pytz.timezone('UTC')).timestamp() * 1000 * 1000 * 1000)
-
-
-def is_str_repr_of_int(string: str) -> bool:
-    """
-    Returns True for strings like: '123i', '+123i', '-123i'
-    """
-    if string.startswith('-') or string.startswith('+'):
-        if string[1:-1].isdigit() and string.endswith('i'):
-            return True
-    if string[0:-1].isdigit() and string.endswith('i'):
-        return True
-
-    return False
-
-
-def utc_now() -> datetime.datetime:
-    """
-    Returns datetime.datetime with UTC tzinfo
-    """
-    return datetime.datetime.utcnow().replace(tzinfo=pytz.timezone("UTC"))
+from telegraf_pyplug.util import datetime_tzinfo_to_nano_unix_timestamp, is_str_repr_of_int, utc_now
 
 
 def print_influxdb_format(
