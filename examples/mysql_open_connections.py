@@ -9,7 +9,8 @@ import sys
 import socket
 from typing import Dict, Union, List
 
-from telegraf_pyplug.common import get_mysql_query_result, print_influxdb_format
+from telegraf_pyplug.main import print_influxdb_format
+from telegraf_pyplug.db import get_mysql_query_result
 
 
 MYSQL_CONFIG: Dict[str, Union[str, int]] = {
