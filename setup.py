@@ -19,6 +19,7 @@ setuptools.setup(
     zip_safe=False,
     install_requires=[
         'PyMySQL==0.10.0',
+        'psycopg2-binary==2.8.6',
         'pytz==2020.1',
     ],
     extras_require={
