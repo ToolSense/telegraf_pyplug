@@ -6,7 +6,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='telegraf_pyplug',
-    version='0.2.0',
+    version='0.3.0',
     author='Andrey Okulov',
     author_email='okulov@ya.ru',
     description='Telegraf_pyplug is a software library to simplify and standardize the development '
@@ -19,6 +19,7 @@ setuptools.setup(
     zip_safe=False,
     install_requires=[
         'PyMySQL==0.10.0',
+        'psycopg2-binary==2.8.6',
         'pytz==2020.1',
     ],
     extras_require={
